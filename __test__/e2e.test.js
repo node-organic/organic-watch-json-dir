@@ -13,7 +13,12 @@ describe('watch-json-dir e2e', () => {
     const filepath = path.join(__dirname, 'dir', 'delete-file.json')
     beforeEach(done => createMockUpFile(done, filepath))
     test('file exist', done => {
-      const instance = getInstanceConfigurations()
+      const emit = {
+        'dataPropertyName': 'data',
+        'onDeleteFile': 'onDeleteFile',
+        'ready': 'ready'
+      }
+      const instance = getInstanceConfigurations(emit)
       instance.plasma.on('onDeleteFile', () => {
         instance.plasma.emit('kill')
         done()
@@ -30,7 +35,12 @@ describe('watch-json-dir e2e', () => {
     afterEach(done => deleteMockUpFile(done, filepath))
 
     test('create a new file', done => {
-      const instance = getInstanceConfigurations()
+      const emit = {
+        'dataPropertyName': 'data',
+        'onNewFile': 'onNewFile',
+        'ready': 'ready'
+      }
+      const instance = getInstanceConfigurations(emit)
       instance.plasma.on('onNewFile', () => {
         instance.plasma.emit('kill')
         done()
@@ -45,10 +55,19 @@ describe('watch-json-dir e2e', () => {
   describe('Update section', () => {
     const filepath = path.join(__dirname, 'dir', 'update-file.json')
 
-    beforeEach(done => createMockUpFile(done, filepath))
+    const emit = {
+      'dataPropertyName': 'data',
+      'onChangeFile': 'onChangeFile',
+      'ready': 'ready'
+    }
+
+    beforeEach(done => {
+      fs.openSync(filepath, 'w')
+      done()
+    })
     afterAll(done => deleteMockUpFile(done, filepath))
     test('update an existing file', done => {
-      const instance = getInstanceConfigurations()
+      const instance = getInstanceConfigurations(emit)
       instance.plasma.on('onChangeFile', () => {
         instance.plasma.emit('kill')
         done()
@@ -93,17 +112,11 @@ const removeJSON = function (filepath) {
   })
 }
 
-const getInstanceConfigurations = function () {
+const getInstanceConfigurations = function (emit) {
   let plasma = new Plasma()
   let dna = {
     'location': path.join(__dirname, 'dir'),
-    'emit': {
-      'dataPropertyName': 'data',
-      'onNewFile': 'onNewFile',
-      'onChangeFile': 'onChangeFile',
-      'onDeleteFile': 'onDeleteFile',
-      'ready': 'ready'
-    }
+    'emit': emit
   }
   let instane = new Organel(plasma, dna)
 
