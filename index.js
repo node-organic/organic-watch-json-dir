@@ -54,7 +54,7 @@ module.exports = class {
       })
     })
   }
-  getCached (path) {
+  popCached (path) {
     let result = this.cache[path]
     delete this.cache[path]
     return result
