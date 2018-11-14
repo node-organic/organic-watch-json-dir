@@ -13,7 +13,7 @@
   },
   "name": "organic-watch-json-dir",
   "description": "Organelle for emitting changes in directory with .json files.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "test": "jest",
