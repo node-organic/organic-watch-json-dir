@@ -47,10 +47,19 @@ module.exports = class {
   loadAsJSON (jsonpath) {
     return new Promise((resolve, reject) => {
       fs.readFile(jsonpath, (err, data) => {
-        if (err) return reject(err)
-        let jsondata = JSON.parse(data.toString())
-        this.cache[jsonpath] = jsondata
-        resolve(jsondata)
+        if (err) {
+          console.error(jsonpath)
+          return reject(err)
+        }
+
+        try {
+          let jsondata = JSON.parse(data.toString())
+          this.cache[jsonpath] = jsondata
+          resolve(jsondata)
+        } catch (err) {
+          console.error(err)
+          reject(err)
+        }
       })
     })
   }

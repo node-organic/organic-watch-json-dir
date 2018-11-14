@@ -2,14 +2,15 @@
   "author": "Boris Filipov",
   "license": "MIT",
   "devDependencies": {
-    "organic-plasma": "^2.1.0",
-    "jest": "^23.6.0",
     "eslint": "^4.18.2",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jest": "^22.0.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "jest": "^23.6.0",
+    "organic-plasma": "^2.1.0"
   },
   "name": "organic-watch-json-dir",
   "description": "Organelle for emitting changes in directory with .json files.",
