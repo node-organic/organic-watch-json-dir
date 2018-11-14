@@ -7,7 +7,7 @@ module.exports = class {
     this.plasma = plasma
     this.cache = {}
     this.dna.emit = dna.emit || {}
-    this.dna.emit.dataPropertyName = 'data'
+    this.dna.emit.dataPropertyName = this.dna.emit.dataPropertyName || 'data'
     this.watcher = chokidar.watch(dna.location + '/*.json')
     this.watcher
       .on('add', this.handle('add').bind(this))

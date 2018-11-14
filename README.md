@@ -31,7 +31,8 @@ npm install organic-watch-json-dir --save
 ```javascript
 {
   type: dna.emit.*,
-  dna.emit.dataPropertyName: JSON
+  <dna.emit.dataPropertyName>: JSON,
+  path: String
 }
 ```
 
