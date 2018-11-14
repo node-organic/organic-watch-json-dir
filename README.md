@@ -41,9 +41,8 @@ npm install organic-watch-json-dir --save
 
 ## Contributing
 
-We 🧡 contribution. Please follow these simple rules: 
+We :hearts: contribution. Please follow these simple rules: 
 
-- Ensure any install or build dependencies are removed before the end of the layer when doing a new version of package.
 - Update the `README.md` with details of changes. This includes new environment variables, useful file locations and parameters.
 - Increase the version numbers in any examples files and the `README.md` to the new version that this Pull Request would represent. 
-- Have fun 🔥💫
+- Have fun :fire::dizzy:
