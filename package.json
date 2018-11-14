@@ -16,7 +16,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "release-patch": "npm version patch",
+    "release-minor": "npm version minor",
+    "release-major": "npm version major",
+    "postversion": "npm publish && git push --tags && git push origin master"
   },
   "repository": {
     "type": "git",
