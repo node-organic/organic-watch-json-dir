@@ -9,7 +9,7 @@ process.on('unhandledRejection', (err) => {
 })
 
 describe('watch-json-dir e2e', () => {
-  describe('Remove file state', () => {
+  describe('Behaviour -> unlink', () => {
     const filepath = path.join(__dirname, 'dir', 'delete-file.json')
     beforeEach(done => createMockUpFile(done, filepath))
     test('file exist', done => {
@@ -30,7 +30,7 @@ describe('watch-json-dir e2e', () => {
     })
   })
 
-  describe('Create a file section', () => {
+  describe('Behaviour -> add', () => {
     const filepath = path.join(__dirname, 'dir', 'new-file.json')
     afterEach(done => deleteMockUpFile(done, filepath))
 
@@ -52,7 +52,7 @@ describe('watch-json-dir e2e', () => {
     })
   })
 
-  describe('Update section', () => {
+  describe('Behaviour -> change', () => {
     const filepath = path.join(__dirname, 'dir', 'update-file.json')
 
     const emit = {
