@@ -7,10 +7,7 @@ version: 2
 commands:
   test-nodejs:
     steps:
-      - run:
-          name: Versions
-          command: npm version
-      - checkout:
+      - checkout
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -53,6 +50,7 @@ jobs:
 workflows:
   node-multi-build:
     jobs:
+      - node-v4
       - node-v6
       - node-v8
       - node-v10
