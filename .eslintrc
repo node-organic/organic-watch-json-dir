@@ -1,5 +1,6 @@
 {
-  "extends": "standard",
+  "plugins": ["jest"],
+  "extends": ["standard", "plugin:jest/recommended"],
   "parserOptions": {
     "ecmaVersion": 2017
   },
