@@ -17,16 +17,30 @@ npm install organic-watch-json-dir --save
 ```javascript
 {
   "location": "/full/path/with/json/files",
+  "reactOn": ChemicalPattern,
   "emit": {
     "dataPropertyName": "data",
-    "onChangeFile": "",
-    "onNewFile": "",
-    "onDeleteFile": "",
+    "onChangeFile": ChemicalType,
+    "onNewFile": ChemicalType,
+    "onDeleteFile": ChemicalType,
+    "ready": ChemicalType
   }
 }
 ```
 
+## reacts
+
+`reactOn` chemical pattern is optional, if not present will execute during build(construction) phase.
+
 ## emits 
+
+### .json file related 
+
+* `onChangeFile` emits when file has been touched
+* `onNewFile` emits when file has been created or it has been initially found
+* `onDeleteFile` emits when file has been removed (with a cached autoloaded data)
+
+all chemicals have the following shape:
 
 ```javascript
 {
@@ -36,14 +50,10 @@ npm install organic-watch-json-dir --save
 }
 ```
 
-* `onChangeFile` emits when file has been touched
-* `onNewFile` emits when file has been created or it has been initially found
-* `onDeleteFile` emits when file has been removed (with a cached autoloaded data)
+### ready
+
+`ready` is optional, if present will emit in plasma dna specified plain chemical type.
 
 ## Contributing
 
-We :hearts: contribution. Please follow these simple rules: 
-
-- Update the `README.md` with details of changes. This includes new environment variables, useful file locations and parameters.
-- Increase the version numbers in any examples files and the `README.md` to the new version that this Pull Request would represent. 
-- Have fun :fire::dizzy:
+We :hearts: contribution so send your PRs accordingly. Dont forget to update the README and tests along the way ;)

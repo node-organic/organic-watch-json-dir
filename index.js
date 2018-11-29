@@ -8,15 +8,26 @@ module.exports = class {
     this.cache = {}
     this.dna.emit = dna.emit || {}
     this.dna.emit.dataPropertyName = this.dna.emit.dataPropertyName || 'data'
-    this.watcher = chokidar.watch(dna.location + '/*.json')
+    if (!dna.reactOn) {
+      this.execute()
+    } else {
+      this.plasma.on(dna.reactOn, function () {
+        this.execute()
+      }, this)
+    }
+    this.plasma.on('kill', () => {
+      if (this.watcher) {
+        this.watcher.close()
+      }
+    })
+  }
+  execute () {
+    this.watcher = chokidar.watch(this.dna.location + '/*.json')
     this.watcher
       .on('add', this.handle('add').bind(this))
       .on('change', this.handle('change').bind(this))
       .on('unlink', this.handle('unlink').bind(this))
       .on('ready', this.ready.bind(this))
-    this.plasma.on('kill', () => {
-      this.watcher.close()
-    })
   }
   async ready () {
     if (this.dna.emit.ready) {
