@@ -8,41 +8,92 @@ process.on('unhandledRejection', (err) => {
   process.exit(1)
 })
 
-test('watch-json-dir e2e', (done) => {
-  let plasma = new Plasma()
-  let dna = {
-    'location': path.join(__dirname, 'dir'),
-    'emit': {
+describe('watch-json-dir e2e', () => {
+  describe('Behaviour -> unlink', () => {
+    const filepath = path.join(__dirname, 'dir', 'delete-file.json')
+    beforeEach(done => createMockUpFile(done, filepath))
+    test('file exist', done => {
+      const emit = {
+        'dataPropertyName': 'data',
+        'onDeleteFile': 'onDeleteFile',
+        'ready': 'ready'
+      }
+      const instance = getInstanceConfigurations(emit)
+      instance.plasma.on('onDeleteFile', () => {
+        instance.plasma.emit('kill')
+        done()
+      })
+
+      instance.plasma.on('ready', async () => {
+        await removeJSON(filepath)
+      })
+    })
+  })
+
+  describe('Behaviour -> add', () => {
+    const filepath = path.join(__dirname, 'dir', 'new-file.json')
+    afterEach(done => deleteMockUpFile(done, filepath))
+
+    test('create a new file', done => {
+      const emit = {
+        'dataPropertyName': 'data',
+        'onNewFile': 'onNewFile',
+        'ready': 'ready'
+      }
+      const instance = getInstanceConfigurations(emit)
+      instance.plasma.on('onNewFile', () => {
+        instance.plasma.emit('kill')
+        done()
+      })
+
+      instance.plasma.on('ready', async () => {
+        await writeJSON(filepath, {value: 'new-file'})
+      })
+    })
+  })
+
+  describe('Behaviour -> change', () => {
+    const filepath = path.join(__dirname, 'dir', 'update-file.json')
+
+    const emit = {
       'dataPropertyName': 'data',
-      'onChangeFile': 'eventName',
-      'onNewFile': 'eventName',
-      'onDeleteFile': 'eventName',
+      'onChangeFile': 'onChangeFile',
       'ready': 'ready'
     }
-  }
-  let instance = new Organel(plasma, dna)
-  let hit = 0
-  instance.plasma.on('eventName', () => {
-    hit += 1
-    if (hit === 4) {
-      instance.plasma.emit('kill')
+
+    beforeEach(done => {
+      fs.openSync(filepath, 'w')
       done()
-    }
-  })
-  instance.plasma.on('ready', async () => {
-    await writeJSON(path.join(__dirname, 'dir', 'new-file.json'), {value: 'new-file'})
-    await sleep(100)
-    await writeJSON(path.join(__dirname, 'dir', 'new-file.json'), {value: 'updated-file'})
-    await sleep(100)
-    await removeJSON(path.join(__dirname, 'dir', 'new-file.json'))
+    })
+    afterAll(done => deleteMockUpFile(done, filepath))
+    test('update an existing file', done => {
+      const instance = getInstanceConfigurations(emit)
+      instance.plasma.on('onChangeFile', () => {
+        instance.plasma.emit('kill')
+        done()
+      })
+
+      instance.plasma.on('ready', async () => {
+        await writeJSON(filepath, {value: 'updated-file'})
+      })
+    })
   })
 })
 
-const sleep = function (timeout) {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, timeout)
+async function createMockUpFile (done, filepath) {
+  const content = JSON.stringify({value: 'content'})
+  fs.writeFile(filepath, content, (err) => {
+    if (err) throw err
+    done()
   })
 }
+
+function deleteMockUpFile (done, filepath) {
+  fs.unlink(filepath, () => {
+    done()
+  })
+}
+
 const writeJSON = function (filepath, content) {
   return new Promise((resolve, reject) => {
     fs.writeFile(filepath, JSON.stringify(content), (err) => {
@@ -59,4 +110,15 @@ const removeJSON = function (filepath) {
       resolve()
     })
   })
+}
+
+const getInstanceConfigurations = function (emit) {
+  let plasma = new Plasma()
+  let dna = {
+    'location': path.join(__dirname, 'dir'),
+    'emit': emit
+  }
+  let instane = new Organel(plasma, dna)
+
+  return instane
 }
