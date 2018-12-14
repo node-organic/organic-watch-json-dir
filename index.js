@@ -8,6 +8,12 @@ module.exports = class {
     this.cache = {}
     this.dna.emit = dna.emit || {}
     this.dna.emit.dataPropertyName = this.dna.emit.dataPropertyName || 'data'
+    this.dna.chokidar = this.dna.chokidar || {
+      awaitWriteFinish: {
+        stabilityThreshold: 100,
+        pollInterval: 10
+      }
+    }
     if (!dna.reactOn) {
       this.execute()
     } else {
@@ -22,7 +28,7 @@ module.exports = class {
     })
   }
   execute () {
-    this.watcher = chokidar.watch(this.dna.location + '/*.json')
+    this.watcher = chokidar.watch(this.dna.location + '/*.json', this.dna.chokidar)
     this.watcher
       .on('add', this.handle('add').bind(this))
       .on('change', this.handle('change').bind(this))
