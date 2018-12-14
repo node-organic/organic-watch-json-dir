@@ -24,6 +24,12 @@ npm install organic-watch-json-dir --save
     "onNewFile": ChemicalType,
     "onDeleteFile": ChemicalType,
     "ready": ChemicalType
+  },
+  "chokidar": {
+    "awaitWriteFinish": {
+      "stabilityThreshold": 100,
+      "pollInterval": 10
+    }
   }
 }
 ```
