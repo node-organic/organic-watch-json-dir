@@ -23,7 +23,8 @@ npm install organic-watch-json-dir --save
     "onChangeFile": ChemicalType,
     "onNewFile": ChemicalType,
     "onDeleteFile": ChemicalType,
-    "ready": ChemicalType
+    "ready": ChemicalType,
+    "errors": ChemicalType
   },
   "chokidar": {
     "awaitWriteFinish": {
@@ -56,9 +57,15 @@ all chemicals have the following shape:
 }
 ```
 
+* note that invalid json files will not trigger emits
+
 ### ready
 
 `ready` is optional, if present will emit in plasma dna specified plain chemical type.
+
+### errors
+
+`errors` is optional, if present will emit any errors found during loading and parsing respective (new/changed) json files.
 
 ## Contributing
 

@@ -21,11 +21,12 @@ module.exports = class {
         this.execute()
       }, this)
     }
-    this.plasma.on('kill', () => {
-      if (this.watcher) {
-        this.watcher.close()
-      }
-    })
+    this.plasma.on('kill', this.dispose, this)
+  }
+  dispose () {
+    if (this.watcher) {
+      this.watcher.close()
+    }
   }
   execute () {
     this.watcher = chokidar.watch(this.dna.location + '/*.json', this.dna.chokidar)
@@ -48,16 +49,27 @@ module.exports = class {
         'unlink': 'onDeleteFile'
       }
       if (this.dna.emit[typeToEmitMap[type]]) {
-        let chemical = {
-          type: this.dna.emit[typeToEmitMap[type]],
-          path: path
+        try {
+          let chemical = {
+            type: this.dna.emit[typeToEmitMap[type]],
+            path: path
+          }
+          if (type !== 'unlink') {
+            chemical[this.dna.emit.dataPropertyName] = await this.loadAsJSON(path)
+          } else {
+            chemical[this.dna.emit.dataPropertyName] = this.popCached(path)
+          }
+          this.plasma.emit(chemical)
+        } catch (err) {
+          if (this.dna.emit.errors) {
+            this.plasma.emit({
+              type: this.dna.emit.errors,
+              err: err
+            })
+          } else {
+            if (this.dna.log) console.error('ignoring', err)
+          }
         }
-        if (type !== 'unlink') {
-          chemical[this.dna.emit.dataPropertyName] = await this.loadAsJSON(path)
-        } else {
-          chemical[this.dna.emit.dataPropertyName] = this.popCached(path)
-        }
-        this.plasma.emit(chemical)
       }
     }
   }
@@ -65,7 +77,6 @@ module.exports = class {
     return new Promise((resolve, reject) => {
       fs.readFile(jsonpath, (err, data) => {
         if (err) {
-          console.error(jsonpath)
           return reject(err)
         }
 
@@ -74,7 +85,6 @@ module.exports = class {
           this.cache[jsonpath] = jsondata
           resolve(jsondata)
         } catch (err) {
-          console.error(err)
           reject(err)
         }
       })
