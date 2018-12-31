@@ -59,7 +59,11 @@ module.exports = class {
           } else {
             chemical[this.dna.emit.dataPropertyName] = this.popCached(path)
           }
-          this.plasma.emit(chemical)
+          if (typeof this.dna.emit[typeToEmitMap[type]] === 'function') {
+            this.dna.emit[typeToEmitMap[type]](chemical)
+          } else {
+            this.plasma.emit(chemical)
+          }
         } catch (err) {
           if (this.dna.emit.errors) {
             this.plasma.emit({

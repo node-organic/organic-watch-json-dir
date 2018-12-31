@@ -20,9 +20,9 @@ npm install organic-watch-json-dir --save
   "reactOn": ChemicalPattern,
   "emit": {
     "dataPropertyName": "data",
-    "onChangeFile": ChemicalType,
-    "onNewFile": ChemicalType,
-    "onDeleteFile": ChemicalType,
+    "onChangeFile": ChemicalType || Function,
+    "onNewFile": ChemicalType || Function,
+    "onDeleteFile": ChemicalType || Function,
     "ready": ChemicalType,
     "errors": ChemicalType
   },
@@ -58,6 +58,7 @@ all chemicals have the following shape:
 ```
 
 * note that invalid json files will not trigger emits
+* when dna.emit[key] is `Function` it will be invoked as `dna.emit[key](c)` where `c` is chemical having the above outlined shape.
 
 ### ready
 
